@@ -62,7 +62,7 @@ public class Unirest {
 	 * Clear default headers
 	 */
 	public static void clearDefaultHeaders() {
-		Options.setOption(Option.DEFAULT_HEADERS, null);
+        Options.DEFAULT_HEADERS.clear();
 	}
 	
 	/**
@@ -70,12 +70,11 @@ public class Unirest {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void setDefaultHeader(String name, String value) {
-		Object headers = Options.getOption(Option.DEFAULT_HEADERS);
+        Map<String, String> headers = Options.DEFAULT_HEADERS;
 		if (headers == null) {
 			headers = new HashMap<String, String>();
 		}
-		((Map<String, String>) headers).put(name, value);
-		Options.setOption(Option.DEFAULT_HEADERS, headers);
+        headers.put(name, value);
 	}
 	
 	/**
