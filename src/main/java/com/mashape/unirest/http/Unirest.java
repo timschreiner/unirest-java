@@ -42,7 +42,7 @@ public class Unirest {
 	public static void setHttpClient(HttpClient httpClient) {
         if(httpClient==null){
             throw new IllegalArgumentException("httpClient cannot be null");
-        }
+	}
 		Options.HTTPCLIENT = httpClient;
 	}
 	
@@ -70,7 +70,7 @@ public class Unirest {
 	@SuppressWarnings("unchecked")
 	public static void setDefaultHeader(String name, String value) {
         Options.DEFAULT_HEADERS.put(name, value);
-	}
+    }
 	
 	/**
 	 * Set the asynchronous AbstractHttpAsyncClient implementation to use for every asynchronous request
@@ -128,5 +128,4 @@ public class Unirest {
 	public static HttpRequestWithBody put(String url) {
 		return new HttpRequestWithBody(HttpMethod.PUT, url);
 	}
-	
 }
