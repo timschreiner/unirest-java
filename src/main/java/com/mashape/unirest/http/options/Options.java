@@ -22,7 +22,9 @@ public class Options {
     public static volatile AsyncIdleConnectionMonitorThread ASYNC_MONITOR;
     public static volatile SyncIdleConnectionMonitorThread SYNC_MONITOR;
     public static volatile Map<String, String> DEFAULT_HEADERS = new HashMap<String, String>();
+    public static CloseableHttpAsyncClient ASYNCHTTPCLIENT;
 
+    //
     private static Map<Option, Object> options = new HashMap<Option, Object>();
 
     public static void setOption(Option option, Object value) {
@@ -59,8 +61,7 @@ public class Options {
             throw new RuntimeException(e);
         }
 
-        CloseableHttpAsyncClient asyncClient = HttpAsyncClientBuilder.create().setDefaultRequestConfig(clientConfig).setConnectionManager(asyncConnectionManager).build();
-        setOption(Option.ASYNCHTTPCLIENT, asyncClient);
+        ASYNCHTTPCLIENT = HttpAsyncClientBuilder.create().setDefaultRequestConfig(clientConfig).setConnectionManager(asyncConnectionManager).build();
         ASYNC_MONITOR = new AsyncIdleConnectionMonitorThread(asyncConnectionManager);
     }
 

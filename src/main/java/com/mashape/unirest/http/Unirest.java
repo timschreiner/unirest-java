@@ -81,7 +81,10 @@ public class Unirest {
 	 * Set the asynchronous AbstractHttpAsyncClient implementation to use for every asynchronous request
 	 */
 	public static void setAsyncHttpClient(CloseableHttpAsyncClient asyncHttpClient) {
-		Options.setOption(Option.ASYNCHTTPCLIENT, asyncHttpClient);
+        if(asyncHttpClient == null){
+            throw new IllegalArgumentException("asyncHttpClient cannot be null");
+        }
+        Options.ASYNCHTTPCLIENT = asyncHttpClient;
 	}
 	
 	/**
@@ -95,7 +98,7 @@ public class Unirest {
 		Options.SYNC_MONITOR.shutdown();
 		
 		// Closing the async client (if running)
-		CloseableHttpAsyncClient asyncClient = (CloseableHttpAsyncClient) Options.getOption(Option.ASYNCHTTPCLIENT);
+		CloseableHttpAsyncClient asyncClient = Options.ASYNCHTTPCLIENT;
 		if (asyncClient.isRunning()) {
 			asyncClient.close();
 			Options.ASYNC_MONITOR.shutdown();

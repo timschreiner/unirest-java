@@ -13,7 +13,6 @@ public class ClientFactory {
 	}
 	
 	public static CloseableHttpAsyncClient getAsyncHttpClient() {
-		return (CloseableHttpAsyncClient) Options.getOption(Option.ASYNCHTTPCLIENT);
+		return Options.ASYNCHTTPCLIENT;
 	}
-	
 }
