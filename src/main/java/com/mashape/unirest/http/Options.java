@@ -1,4 +1,4 @@
-package com.mashape.unirest.http.options;
+package com.mashape.unirest.http;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,12 +19,12 @@ import org.apache.http.client.HttpClient;
 public class Options {
 
     public static volatile long CONNECTION_TIMEOUT = 10000;
-    public static volatile long SOCKET_TIMEOUT = 60000;
-    public static volatile AsyncIdleConnectionMonitorThread ASYNC_MONITOR;
-    public static volatile SyncIdleConnectionMonitorThread SYNC_MONITOR;
-    public static volatile Map<String, String> DEFAULT_HEADERS = new HashMap<String, String>();
-    public static CloseableHttpAsyncClient ASYNCHTTPCLIENT;
-    public static HttpClient HTTPCLIENT;
+    static volatile long SOCKET_TIMEOUT = 60000;
+    static volatile AsyncIdleConnectionMonitorThread ASYNC_MONITOR;
+    static volatile SyncIdleConnectionMonitorThread SYNC_MONITOR;
+    static volatile Map<String, String> DEFAULT_HEADERS = new HashMap<String, String>();
+    static CloseableHttpAsyncClient ASYNCHTTPCLIENT;
+    static HttpClient HTTPCLIENT;
 
     static {
         refresh();

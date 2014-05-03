@@ -30,7 +30,6 @@ import java.io.IOException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 
-import com.mashape.unirest.http.options.Options;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -95,8 +94,9 @@ public class Unirest {
 		Options.SYNC_MONITOR.shutdown();
 		
 		// Closing the async client (if running)
-		if (Options.ASYNCHTTPCLIENT.isRunning()) {
-			Options.ASYNCHTTPCLIENT.close();
+        CloseableHttpAsyncClient asyncClient = Options.ASYNCHTTPCLIENT;
+		if (asyncClient.isRunning()) {
+			asyncClient.close();
 			Options.ASYNC_MONITOR.shutdown();
 		}
 	}

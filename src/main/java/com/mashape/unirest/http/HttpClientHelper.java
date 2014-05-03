@@ -28,7 +28,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -50,8 +49,6 @@ import org.apache.http.nio.entity.NByteArrayEntity;
 
 import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.http.options.Options;
-import com.mashape.unirest.http.utils.ClientFactory;
 import com.mashape.unirest.request.HttpRequest;
 
 public class HttpClientHelper {
@@ -205,5 +202,14 @@ public class HttpClientHelper {
 
         return reqObj;
     }
-
+    
+    private static class ClientFactory {
+        public static HttpClient getHttpClient() {
+            return Options.HTTPCLIENT;
+        }
+	
+        public static CloseableHttpAsyncClient getAsyncHttpClient() {
+            return Options.ASYNCHTTPCLIENT;
+        }
+    }
 }
