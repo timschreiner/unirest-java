@@ -20,6 +20,8 @@ public class Options {
     public static volatile long CONNECTION_TIMEOUT = 10000;
     public static volatile long SOCKET_TIMEOUT = 60000;
     public static volatile AsyncIdleConnectionMonitorThread ASYNC_MONITOR;
+    public static volatile SyncIdleConnectionMonitorThread SYNC_MONITOR;
+    
 
     private static Map<Option, Object> options = new HashMap<Option, Object>();
 
@@ -45,9 +47,8 @@ public class Options {
 
         // Create clients
         setOption(Option.HTTPCLIENT, HttpClientBuilder.create().setDefaultRequestConfig(clientConfig).setConnectionManager(syncConnectionManager).build());
-        SyncIdleConnectionMonitorThread syncIdleConnectionMonitorThread = new SyncIdleConnectionMonitorThread(syncConnectionManager);
-        setOption(Option.SYNC_MONITOR, syncIdleConnectionMonitorThread);
-        syncIdleConnectionMonitorThread.start();
+        SYNC_MONITOR =  new SyncIdleConnectionMonitorThread(syncConnectionManager);
+        SYNC_MONITOR.start();
 
         DefaultConnectingIOReactor ioreactor;
         PoolingNHttpClientConnectionManager asyncConnectionManager;
@@ -60,7 +61,7 @@ public class Options {
 
         CloseableHttpAsyncClient asyncClient = HttpAsyncClientBuilder.create().setDefaultRequestConfig(clientConfig).setConnectionManager(asyncConnectionManager).build();
         setOption(Option.ASYNCHTTPCLIENT, asyncClient);
-        Options.ASYNC_MONITOR = new AsyncIdleConnectionMonitorThread(asyncConnectionManager);
+        ASYNC_MONITOR = new AsyncIdleConnectionMonitorThread(asyncConnectionManager);
     }
    
 }
