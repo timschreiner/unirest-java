@@ -90,8 +90,7 @@ public class HttpClientHelper {
 		CloseableHttpAsyncClient asyncHttpClient = ClientFactory.getAsyncHttpClient();
 		if (!asyncHttpClient.isRunning()) {
 			asyncHttpClient.start();
-			AsyncIdleConnectionMonitorThread asyncIdleConnectionMonitorThread = (AsyncIdleConnectionMonitorThread) Options.getOption(Option.ASYNC_MONITOR);
-			asyncIdleConnectionMonitorThread.start();
+			Options.ASYNC_MONITOR.start();
 		}
 
 		final Future<org.apache.http.HttpResponse> future = asyncHttpClient.execute(requestObj,

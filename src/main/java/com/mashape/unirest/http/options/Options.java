@@ -19,6 +19,7 @@ public class Options {
 
     public static volatile long CONNECTION_TIMEOUT = 10000;
     public static volatile long SOCKET_TIMEOUT = 60000;
+    public static volatile AsyncIdleConnectionMonitorThread ASYNC_MONITOR;
 
     private static Map<Option, Object> options = new HashMap<Option, Object>();
 
@@ -59,7 +60,7 @@ public class Options {
 
         CloseableHttpAsyncClient asyncClient = HttpAsyncClientBuilder.create().setDefaultRequestConfig(clientConfig).setConnectionManager(asyncConnectionManager).build();
         setOption(Option.ASYNCHTTPCLIENT, asyncClient);
-        setOption(Option.ASYNC_MONITOR, new AsyncIdleConnectionMonitorThread(asyncConnectionManager));
+        Options.ASYNC_MONITOR = new AsyncIdleConnectionMonitorThread(asyncConnectionManager);
     }
    
 }

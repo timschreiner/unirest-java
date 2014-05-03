@@ -102,8 +102,7 @@ public class Unirest {
 		CloseableHttpAsyncClient asyncClient = (CloseableHttpAsyncClient) Options.getOption(Option.ASYNCHTTPCLIENT);
 		if (asyncClient.isRunning()) {
 			asyncClient.close();
-			AsyncIdleConnectionMonitorThread asyncIdleConnectionMonitorThread = (AsyncIdleConnectionMonitorThread) Options.getOption(Option.ASYNC_MONITOR);
-			asyncIdleConnectionMonitorThread.shutdown();
+			Options.ASYNC_MONITOR.shutdown();
 		}
 		
 	}
