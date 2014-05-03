@@ -14,6 +14,7 @@ import org.apache.http.nio.reactor.IOReactorException;
 
 import com.mashape.unirest.http.async.utils.AsyncIdleConnectionMonitorThread;
 import com.mashape.unirest.http.utils.SyncIdleConnectionMonitorThread;
+import org.apache.http.client.HttpClient;
 
 public class Options {
 
@@ -23,17 +24,7 @@ public class Options {
     public static volatile SyncIdleConnectionMonitorThread SYNC_MONITOR;
     public static volatile Map<String, String> DEFAULT_HEADERS = new HashMap<String, String>();
     public static CloseableHttpAsyncClient ASYNCHTTPCLIENT;
-
-    //
-    private static Map<Option, Object> options = new HashMap<Option, Object>();
-
-    public static void setOption(Option option, Object value) {
-        options.put(option, value);
-    }
-
-    public static Object getOption(Option option) {
-        return options.get(option);
-    }
+    public static HttpClient HTTPCLIENT;
 
     static {
         refresh();
@@ -48,7 +39,7 @@ public class Options {
         syncConnectionManager.setDefaultMaxPerRoute(10000);
 
         // Create clients
-        setOption(Option.HTTPCLIENT, HttpClientBuilder.create().setDefaultRequestConfig(clientConfig).setConnectionManager(syncConnectionManager).build());
+        HTTPCLIENT = HttpClientBuilder.create().setDefaultRequestConfig(clientConfig).setConnectionManager(syncConnectionManager).build();
         SYNC_MONITOR = new SyncIdleConnectionMonitorThread(syncConnectionManager);
         SYNC_MONITOR.start();
 

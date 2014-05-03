@@ -26,17 +26,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.mashape.unirest.http;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 
-import com.mashape.unirest.http.options.Option;
 import com.mashape.unirest.http.options.Options;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 public class Unirest {
 	
@@ -44,7 +41,10 @@ public class Unirest {
 	 * Set the HttpClient implementation to use for every synchronous request
 	 */
 	public static void setHttpClient(HttpClient httpClient) {
-		Options.setOption(Option.HTTPCLIENT, httpClient);
+        if(httpClient==null){
+            throw new IllegalArgumentException("httpClient cannot be null");
+        }
+		Options.HTTPCLIENT = httpClient;
 	}
 	
 	/**
@@ -70,11 +70,7 @@ public class Unirest {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void setDefaultHeader(String name, String value) {
-        Map<String, String> headers = Options.DEFAULT_HEADERS;
-		if (headers == null) {
-			headers = new HashMap<String, String>();
-		}
-        headers.put(name, value);
+        Options.DEFAULT_HEADERS.put(name, value);
 	}
 	
 	/**
@@ -92,18 +88,17 @@ public class Unirest {
 	 */
 	public static void shutdown() throws IOException {
 		// Closing the sync client
-		CloseableHttpClient syncClient = (CloseableHttpClient) Options.getOption(Option.HTTPCLIENT);
-		syncClient.close();
+        if(Options.HTTPCLIENT instanceof CloseableHttpClient){
+            ((CloseableHttpClient)Options.HTTPCLIENT).close();    
+        }
 		
 		Options.SYNC_MONITOR.shutdown();
 		
 		// Closing the async client (if running)
-		CloseableHttpAsyncClient asyncClient = Options.ASYNCHTTPCLIENT;
-		if (asyncClient.isRunning()) {
-			asyncClient.close();
+		if (Options.ASYNCHTTPCLIENT.isRunning()) {
+			Options.ASYNCHTTPCLIENT.close();
 			Options.ASYNC_MONITOR.shutdown();
 		}
-		
 	}
 	
 	public static GetRequest get(String url) {
