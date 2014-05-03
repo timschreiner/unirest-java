@@ -1,6 +1,5 @@
 package com.mashape.unirest.http;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.client.config.RequestConfig;
@@ -14,25 +13,26 @@ import org.apache.http.nio.reactor.IOReactorException;
 
 import com.mashape.unirest.http.async.utils.AsyncIdleConnectionMonitorThread;
 import com.mashape.unirest.http.utils.SyncIdleConnectionMonitorThread;
+import java.util.HashMap;
 import org.apache.http.client.HttpClient;
 
-public class Options {
+class Options {
 
-    public static volatile long CONNECTION_TIMEOUT = 10000;
+    static volatile long CONNECTION_TIMEOUT = 10000;
     static volatile long SOCKET_TIMEOUT = 60000;
     static volatile AsyncIdleConnectionMonitorThread ASYNC_MONITOR;
     static volatile SyncIdleConnectionMonitorThread SYNC_MONITOR;
-    static volatile Map<String, String> DEFAULT_HEADERS = new HashMap<String, String>();
-    static CloseableHttpAsyncClient ASYNCHTTPCLIENT;
-    static HttpClient HTTPCLIENT;
+    static final Map<String, String> DEFAULT_HEADERS = new HashMap<String, String>();
+    static volatile CloseableHttpAsyncClient ASYNCHTTPCLIENT;
+    static volatile HttpClient HTTPCLIENT;
 
     static {
         refresh();
     }
 
-    public static void refresh() {
+    static void refresh() {
         // Create common default configuration
-        RequestConfig clientConfig = RequestConfig.custom().setConnectTimeout(((Long) CONNECTION_TIMEOUT).intValue()).setSocketTimeout(((Long) SOCKET_TIMEOUT).intValue()).setConnectionRequestTimeout(((Long) SOCKET_TIMEOUT).intValue()).build();
+        RequestConfig clientConfig = RequestConfig.custom().setConnectTimeout((int) CONNECTION_TIMEOUT).setSocketTimeout((int) SOCKET_TIMEOUT).setConnectionRequestTimeout((int) SOCKET_TIMEOUT).build();
 
         PoolingHttpClientConnectionManager syncConnectionManager = new PoolingHttpClientConnectionManager();
         syncConnectionManager.setMaxTotal(10000);
