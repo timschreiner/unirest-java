@@ -51,7 +51,7 @@ public class HttpResponse<T> {
 		return false;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public HttpResponse(org.apache.http.HttpResponse response, Class<T> responseClass) {
 		HttpEntity responseEntity = response.getEntity();
 		

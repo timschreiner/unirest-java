@@ -67,7 +67,6 @@ public class Unirest {
 	/**
 	 * Set default header
 	 */
-	@SuppressWarnings("unchecked")
 	public static void setDefaultHeader(String name, String value) {
         Options.DEFAULT_HEADERS.put(name, value);
     }
