@@ -53,8 +53,8 @@ public class Unirest {
 	 * Set the connection timeout and socket timeout
 	 */
 	public static void setTimeouts(long connectionTimeout, long socketTimeout) {
-		Options.setOption(Option.CONNECTION_TIMEOUT, connectionTimeout);
-		Options.setOption(Option.SOCKET_TIMEOUT, socketTimeout);
+        Options.CONNECTION_TIMEOUT = connectionTimeout;
+        Options.SOCKET_TIMEOUT = socketTimeout;
 		
 		// Reload the client implementations
 		Options.refresh();
