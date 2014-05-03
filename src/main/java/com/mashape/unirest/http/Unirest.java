@@ -26,19 +26,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.mashape.unirest.http;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 
-import com.mashape.unirest.http.async.utils.AsyncIdleConnectionMonitorThread;
-import com.mashape.unirest.http.options.Option;
-import com.mashape.unirest.http.options.Options;
-import com.mashape.unirest.http.utils.SyncIdleConnectionMonitorThread;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 public class Unirest {
 	
@@ -46,15 +40,18 @@ public class Unirest {
 	 * Set the HttpClient implementation to use for every synchronous request
 	 */
 	public static void setHttpClient(HttpClient httpClient) {
-		Options.setOption(Option.HTTPCLIENT, httpClient);
+        if(httpClient==null){
+            throw new IllegalArgumentException("httpClient cannot be null");
+	}
+		Options.HTTPCLIENT = httpClient;
 	}
 	
 	/**
 	 * Set the connection timeout and socket timeout
 	 */
 	public static void setTimeouts(long connectionTimeout, long socketTimeout) {
-		Options.setOption(Option.CONNECTION_TIMEOUT, connectionTimeout);
-		Options.setOption(Option.SOCKET_TIMEOUT, socketTimeout);
+        Options.CONNECTION_TIMEOUT = connectionTimeout;
+        Options.SOCKET_TIMEOUT = socketTimeout;
 		
 		// Reload the client implementations
 		Options.refresh();
@@ -64,27 +61,24 @@ public class Unirest {
 	 * Clear default headers
 	 */
 	public static void clearDefaultHeaders() {
-		Options.setOption(Option.DEFAULT_HEADERS, null);
+        Options.DEFAULT_HEADERS.clear();
 	}
 	
 	/**
 	 * Set default header
 	 */
-	@SuppressWarnings("unchecked")
 	public static void setDefaultHeader(String name, String value) {
-		Object headers = Options.getOption(Option.DEFAULT_HEADERS);
-		if (headers == null) {
-			headers = new HashMap<String, String>();
-		}
-		((Map<String, String>) headers).put(name, value);
-		Options.setOption(Option.DEFAULT_HEADERS, headers);
-	}
+        Options.DEFAULT_HEADERS.put(name, value);
+    }
 	
 	/**
 	 * Set the asynchronous AbstractHttpAsyncClient implementation to use for every asynchronous request
 	 */
 	public static void setAsyncHttpClient(CloseableHttpAsyncClient asyncHttpClient) {
-		Options.setOption(Option.ASYNCHTTPCLIENT, asyncHttpClient);
+        if(asyncHttpClient == null){
+            throw new IllegalArgumentException("asyncHttpClient cannot be null");
+        }
+        Options.ASYNCHTTPCLIENT = asyncHttpClient;
 	}
 	
 	/**
@@ -92,20 +86,18 @@ public class Unirest {
 	 */
 	public static void shutdown() throws IOException {
 		// Closing the sync client
-		CloseableHttpClient syncClient = (CloseableHttpClient) Options.getOption(Option.HTTPCLIENT);
-		syncClient.close();
+        if(Options.HTTPCLIENT instanceof CloseableHttpClient){
+            ((CloseableHttpClient)Options.HTTPCLIENT).close();    
+        }
 		
-		SyncIdleConnectionMonitorThread syncIdleConnectionMonitorThread = (SyncIdleConnectionMonitorThread) Options.getOption(Option.SYNC_MONITOR);
-		syncIdleConnectionMonitorThread.shutdown();
+		Options.SYNC_MONITOR.shutdown();
 		
 		// Closing the async client (if running)
-		CloseableHttpAsyncClient asyncClient = (CloseableHttpAsyncClient) Options.getOption(Option.ASYNCHTTPCLIENT);
+        CloseableHttpAsyncClient asyncClient = Options.ASYNCHTTPCLIENT;
 		if (asyncClient.isRunning()) {
 			asyncClient.close();
-			AsyncIdleConnectionMonitorThread asyncIdleConnectionMonitorThread = (AsyncIdleConnectionMonitorThread) Options.getOption(Option.ASYNC_MONITOR);
-			asyncIdleConnectionMonitorThread.shutdown();
+			Options.ASYNC_MONITOR.shutdown();
 		}
-		
 	}
 	
 	public static GetRequest get(String url) {
@@ -135,5 +127,4 @@ public class Unirest {
 	public static HttpRequestWithBody put(String url) {
 		return new HttpRequestWithBody(HttpMethod.PUT, url);
 	}
-	
 }
